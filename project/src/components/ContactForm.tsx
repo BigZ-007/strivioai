@@ -14,25 +14,27 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    try {
-      await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          company: formData.company,
-          message: formData.message,
-        },
-        'YOUR_PUBLIC_KEY'
-      );
-      
+  try {
+    const response = await fetch('https://hook.eu2.make.com/i06gwo6xkxrde43dhyv6mcdj6qhh350h', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
       toast.success('Message sent successfully!');
       setFormData({ name: '', email: '', company: '', message: '' });
-    } catch (error) {
+    } else {
       toast.error('Failed to send message. Please try again.');
     }
-  };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    toast.error('Failed to send message. Please try again.');
+  }
+};
+
 
   return (
     <section id="contact" className="py-20 bg-white">
